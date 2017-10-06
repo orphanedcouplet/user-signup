@@ -22,7 +22,7 @@ def length_test(input_string):
     else:
         return True
 
-@app.route("/validate-form", methods=["POST"])
+@app.route("/", methods=["POST"])
 def validate_form():
     #initialize jinja template
     template = jinja_env.get_template("input-form.html")
@@ -77,5 +77,13 @@ def validate_form():
             email=email, 
             email_error=email_error
             )
+
+@app.route("/registration-successful")
+def registration_successful_page():
+    #initialize jinja template
+    template = jinja_env.get_template("registration-successful.html")
+    #store username in a variable
+    username = request.args.get("username")
+    return template.render(username=username)
 
 app.run()
