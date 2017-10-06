@@ -65,7 +65,7 @@ def validate_form():
         email = ""
     
     if not username_error and not password_initial_error and not password_verify_error and not email_error:
-        return redirect("/registration-successful")
+        return redirect("/registration-successful?username={0}".format(username))
     else:
         return template.render(
             username=username, 
@@ -79,7 +79,7 @@ def validate_form():
             )
 
 @app.route("/registration-successful")
-def registration_successful_page():
+def registration_successful():
     #initialize jinja template
     template = jinja_env.get_template("registration-successful.html")
     #store username in a variable
