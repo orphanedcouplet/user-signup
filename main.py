@@ -1,6 +1,6 @@
-from flask import Flask, request, redirect
 import os
 import jinja2
+from flask import Flask, request, redirect
 
 template_dir = os.path.join(os.path.dirname(__file__), "templates")
 jinja_env = jinja2.Environment(loader = jinja2.FileSystemLoader(template_dir), autoescape=True)
@@ -24,6 +24,9 @@ def length_test(input_string):
 
 @app.route("/validate-form", methods=["POST"])
 def validate_form():
+    #initialize jinja template
+    template = jinja_env.get_template("input-form.html")
+
     #validate username
     username = request.form["username"]
     username_error = ""
@@ -47,7 +50,7 @@ def validate_form():
     #validate password_verify (match)
     password_verify = request.form["password_verify"]
     password_verify_error = ""
-        #if password_initial != password_verify: "Passwords do not match"
+    #if password_initial != password_verify: "Passwords do not match"
     if password_initial != password_verify:
         password_verify_error = "Passwords do not match"
         password_verify = ""
@@ -55,11 +58,24 @@ def validate_form():
     #validate email
     email = request.form["email"]
     email_error = ""
-        #if email = False: fine
-    if email:
-        if "@" not in email or "." not in email:
-            email_error = "Must provide a valid email address"
-            email = ""
-        #if email = True and ("@" not in email or "." not in email): "Must provide a valid email address"
+    #if email = False: fine
+    #if email = True and ("@" not in email or "." not in email): "Must provide a valid email address"
+    if email and (("@" not in email) or ("." not in email)):
+        email_error = "Must provide a valid email address"
+        email = ""
+    
+    if not username_error and not password_initial_error and not password_verify_error and not email_error:
+        return redirect("/registration-successful")
+    else:
+        return template.render(
+            username=username, 
+            username_error=username_error, 
+            password_initial=password_initial, 
+            password_initial_error=password_initial_error, 
+            password_verify=password_verify, 
+            password_verify_error=password_verify_error, 
+            email=email, 
+            email_error=email_error
+            )
 
 app.run()
