@@ -44,7 +44,7 @@ def validate_form():
         username = ""
     
     #validate password_initial
-    if password_initial = username:
+    if password_initial == username:
         password_initial_error = "Password must not be the same as username"
         password_initial = ""
     elif " " in password_initial:
